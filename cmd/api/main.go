@@ -1,16 +1,22 @@
 package main
 
 import (
-    "log"
-    "go-wallet/internal/config"
-    "go-wallet/internal/delivery/http/handler"
-    "go-wallet/internal/delivery/http/router"
-    "go-wallet/internal/repository/mongodb"
-    "go-wallet/internal/usecase"
-    "go-wallet/pkg/database/mongdb"
+	"go-wallet/internal/config"
+	"go-wallet/internal/delivery/http/handler"
+	"go-wallet/internal/delivery/http/router"
+	"go-wallet/internal/repository/mongodb"
+	"go-wallet/internal/usecase"
+	"go-wallet/pkg/database/mongdb"
+	"log"
+	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	if os.Getenv("GIN_MODE") == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	}
     // Load config
     cfg := config.NewConfig()
 
