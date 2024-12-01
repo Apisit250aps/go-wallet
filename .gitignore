@@ -77,3 +77,4 @@ $RECYCLE.BIN/
 # Development
 .env
 .vscode/
+*.bat

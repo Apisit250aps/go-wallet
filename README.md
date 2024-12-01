@@ -9,27 +9,40 @@
 - Gin Framework
 - godotenv สำหรับจัดการ environment variables
 
-## โครงสร้างโปรเจค
+# โครงสร้างโปรเจคและความหมาย
+
 ```
 go-wallet/
-├── cmd/
-│   └── api/
-│       └── main.go            # จุดเริ่มต้นของแอปพลิเคชัน
-├── internal/
-│   ├── config/               # การตั้งค่าต่างๆ
-│   ├── domain/              # โมเดลและ interface
-│   ├── usecase/             # business logic
-│   ├── repository/          # การจัดการข้อมูลกับ database
-│   └── delivery/            # HTTP handlers และ middleware
-├── pkg/
-│   ├── auth/                # เครื่องมือสำหรับ JWT และ password
-│   ├── database/           # การเชื่อมต่อ database
-│   └── response/           # รูปแบบ response มาตรฐาน
-├── .env                    # ไฟล์ตั้งค่าสภาพแวดล้อม
-├── .env.example           # ตัวอย่างไฟล์ตั้งค่า
-└── README.md
+├── cmd/                    # โฟลเดอร์สำหรับไฟล์ที่ใช้รันแอปพลิเคชัน
+│   └── api/               # โฟลเดอร์สำหรับ API service
+│       └── main.go        # จุดเริ่มต้นของแอปพลิเคชัน เป็นที่รวม dependencies ทั้งหมด
+├── internal/              # โค้ดที่ใช้เฉพาะภายในโปรเจคนี้เท่านั้น ไม่สามารถ import ไปใช้ที่อื่นได้
+│   ├── config/           # การตั้งค่าต่างๆ ของแอปพลิเคชัน เช่น database, server, JWT
+│   ├── domain/          # เก็บ entities และ interfaces หลักของระบบ (business rules)
+│   ├── usecase/         # เก็บ business logic หรือกฎการทำงานต่างๆ ของระบบ
+│   ├── repository/      # ส่วนติดต่อกับฐานข้อมูล จัดการการอ่าน/เขียนข้อมูล
+│   └── delivery/        # ส่วนรับส่งข้อมูลกับภายนอก (HTTP, gRPC) รวมถึง middleware
+├── pkg/                 # โค้ดที่สามารถนำไปใช้โปรเจคอื่นได้ (reusable packages)
+│   ├── auth/            # เครื่องมือสำหรับจัดการ authentication (JWT, password hashing)
+│   ├── database/       # utility functions สำหรับเชื่อมต่อฐานข้อมูล
+│   └── response/       # รูปแบบ response มาตรฐานที่ส่งกลับไปยัง client
+├── .env                # ไฟล์เก็บค่า environment variables สำหรับ development
+├── .env.example       # ตัวอย่างไฟล์ .env เพื่อให้ developer อื่นๆ รู้ว่าต้องตั้งค่าอะไรบ้าง
+└── README.md          # เอกสารอธิบายโปรเจค วิธีติดตั้ง และการใช้งาน
 ```
 
+### หลักการแบ่งโฟลเดอร์:
+- `cmd/` - เก็บ entry points ของแอปพลิเคชัน แยกตามประเภทของ service
+- `internal/` - โค้ดที่ใช้เฉพาะภายในโปรเจคนี้ Go จะป้องกันไม่ให้โปรเจคอื่นนำไป import
+- `pkg/` - แพ็คเกจที่สามารถแชร์ไปใช้ในโปรเจคอื่นได้ มักเป็น utilities ต่างๆ
+- `.env` files - ไฟล์สำหรับตั้งค่าที่แตกต่างกันในแต่ละสภาพแวดล้อม (development, production)
+
+### Clean Architecture:
+โครงสร้างนี้ออกแบบตามหลัก Clean Architecture โดย:
+1. `domain` - เป็นชั้นในสุด ไม่ขึ้นกับชั้นอื่นๆ
+2. `usecase` - ใช้ domain และมี business logic
+3. `repository` - จัดการข้อมูลตาม interface ที่กำหนดใน domain
+4. `delivery` - ชั้นนอกสุด จัดการการรับส่งข้อมูลกับภายนอก
 ## การติดตั้ง
 
 1. Clone โปรเจค:
