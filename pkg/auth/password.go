@@ -1,13 +1,23 @@
 package auth
 
-import "golang.org/x/crypto/bcrypt"
+import (
+    "log"
+    "golang.org/x/crypto/bcrypt"
+)
 
 func HashPassword(password string) (string, error) {
-    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-    return string(bytes), err
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+    if err != nil {
+        return "", err
+    }
+    return string(bytes), nil
 }
 
 func CheckPasswordHash(password, hash string) bool {
     err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-    return err == nil
+    if err != nil {
+        log.Println("Password verification failed:", err)
+        return false
+    }
+    return true
 }
