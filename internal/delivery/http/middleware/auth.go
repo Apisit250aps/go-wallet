@@ -15,7 +15,6 @@ func AuthMiddleware(jwtSecret string) gin.HandlerFunc {
             c.Abort()
             return
         }
-
         // Bearer token
         parts := strings.Split(authHeader, " ")
         if len(parts) != 2 || parts[0] != "Bearer" {
